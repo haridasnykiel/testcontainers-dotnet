@@ -1,4 +1,4 @@
-﻿namespace DotNet.Testcontainers.Configurations
+namespace DotNet.Testcontainers.Configurations
 {
   using System;
   using System.Collections.Generic;
@@ -16,8 +16,7 @@
 
     protected string GetDockerConfig(string propertyName)
     {
-      _ = this.properties.TryGetValue(propertyName, out var propertyValue);
-      return propertyValue;
+      return this.GetPropertyValue(propertyName);
     }
 
     protected Uri GetDockerHost(string propertyName)
@@ -42,6 +41,23 @@
       {
         return null;
       }
+    }
+
+    protected string GetDockerCertPath(string propertyName)
+    {
+      return this.GetPropertyValue(propertyName);
+    }
+
+    protected bool GetDockerTls(string propertyName)
+    {
+      _ = this.properties.TryGetValue(propertyName, out var propertyValue);
+      return "1".Equals(propertyValue, StringComparison.Ordinal) || (bool.TryParse(propertyValue, out var tlsEnabled) && tlsEnabled);
+    }
+
+    protected bool GetDockerTlsVerify(string propertyName)
+    {
+      _ = this.properties.TryGetValue(propertyName, out var propertyValue);
+      return "1".Equals(propertyValue, StringComparison.Ordinal) || (bool.TryParse(propertyValue, out var tlsVerifyEnabled) && tlsVerifyEnabled);
     }
 
     protected bool GetRyukDisabled(string propertyName)
@@ -69,6 +85,11 @@
     }
 
     protected string GetHubImageNamePrefix(string propertyName)
+    {
+      return this.GetPropertyValue(propertyName);
+    }
+
+    private string GetPropertyValue(string propertyName)
     {
       _ = this.properties.TryGetValue(propertyName, out var propertyValue);
       return propertyValue;
